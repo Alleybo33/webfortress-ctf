@@ -7,21 +7,21 @@ Task 1: Cross-Site Scripting (XSS)
 Vulnerability Analysis
 The search bar on this page is a perfect example of a reflected XSS vulnerability. This happens when an application takes user input and immediately reflects it back to the page without proper sanitization. This allows an attacker to inject and execute malicious scripts in the victim's browser.
 
-# Exploitation
-# Navigate to the website's search bar.
+Exploitation
+Navigate to the website's search bar.
 
-# Input the following payload:
+Input the following payload:
 
-# <script>alert('xss')</script>
-# Click the "Search" button.
+ <script>alert('xss')</script>
+Click the "Search" button.
 
-# Observe the result: an alert box should pop up with the text "xss". This confirms the vulnerability is present.
+Observe the result: an alert box should pop up with the text "xss". This confirms the vulnerability is present.
 
-# Retrieve the flag from the alert box:
+Retrieve the flag from the alert box:
 
-# FLAG1{XSS_D3t3ct3d_S3cur1ty_Br34ch}
+FLAG1{}
 
-# Alternative Payloads & Lessons Learned
+Alternative Payloads & Lessons Learned
 While the basic payload is effective, understanding different types is key. For example, you could try:
 
 "><script>alert(1)</script>: This payload breaks out of an HTML attribute and injects a script tag.
@@ -46,7 +46,7 @@ Observe the result: The database returns unintended data because the UNION opera
 
 Retrieve the flag from the returned data:
 
-FLAG2{SQL1_1nj3ct10n_D3t3ct3d}
+FLAG2{}
 
 Lessons Learned
 The most effective way to prevent SQL Injection is by using parameterized queries or prepared statements. These methods separate the SQL code from the user input, ensuring the input is treated as a literal value rather than an executable command.
@@ -69,7 +69,7 @@ Observe the result: The server returns the contents of flag3.txt instead of a ha
 
 Retrieve the flag:
 
-FLAG3{F1l3_P4th_Tr4v3rs4l_3xpl01t3d}
+FLAG3{}
 
 Lessons Learned
 To prevent this, always validate and sanitize file paths. A whitelist-based access control system is ideal—it only allows access to a pre-defined list of files, effectively blocking any attempts to navigate outside of the designated directory.
@@ -90,7 +90,7 @@ Observe the result: The application executes the ping google.com command as inte
 
 Retrieve the flag:
 
-FLAG4{C0mm4nd_1nj3ct10n_3x3cut3d}
+FLAG4{}
 
 Alternative Payloads & Lessons Learned
 Other common command separators you could try include | (pipe) or &&. For example:

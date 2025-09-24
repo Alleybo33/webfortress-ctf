@@ -97,7 +97,7 @@ FLAG4{}
 Alternative Payloads & Lessons Learned
 Other common command separators you could try include | (pipe) or &&. For example:
 
-google.com | ls
+google.com; ls
 
 google.com | whoami: Executes whoami, revealing the user the server is running as.
 

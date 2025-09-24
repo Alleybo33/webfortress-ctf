@@ -1,11 +1,11 @@
 # webfortress-ctf
-# TryHackMe: WebFortress-CTF Room - Official Write-Up
-# Introduction
-# Welcome to the official write-up for the Web Exploitation Room! This room is an excellent, hands-on learning experience designed to introduce you to some of the most common and critical web application vulnerabilities. By the end of this guide, you'll have a clear understanding of how to identify and exploit Cross-Site Scripting (XSS), SQL Injection (SQLi), Path Traversal, and Command Injection. Get ready to dive into the world of ethical hacking and see firsthand why input sanitization is a developer's best friend. 🔒💻
+TryHackMe: WebFortress-CTF Room - Official Write-Up
+Introduction
+Welcome to the official write-up for the Web Exploitation Room! This room is an excellent, hands-on learning experience designed to introduce you to some of the most common and critical web application vulnerabilities. By the end of this guide, you'll have a clear understanding of how to identify and exploit Cross-Site Scripting (XSS), SQL Injection (SQLi), Path Traversal, and Command Injection. Get ready to dive into the world of ethical hacking and see firsthand why input sanitization is a developer's best friend. 🔒💻
 
-# Task 1: Cross-Site Scripting (XSS)
-# Vulnerability Analysis
-# The search bar on this page is a perfect example of a reflected XSS vulnerability. This happens when an application takes user input and immediately reflects it back to the page without proper sanitization. This allows an attacker to inject and execute malicious scripts in the victim's browser.
+Task 1: Cross-Site Scripting (XSS)
+Vulnerability Analysis
+The search bar on this page is a perfect example of a reflected XSS vulnerability. This happens when an application takes user input and immediately reflects it back to the page without proper sanitization. This allows an attacker to inject and execute malicious scripts in the victim's browser.
 
 # Exploitation
 # Navigate to the website's search bar.

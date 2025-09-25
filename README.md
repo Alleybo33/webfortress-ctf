@@ -5,7 +5,7 @@ Introduction
 
 Welcome to the official write-up for the Web Exploitation Room! This room is an excellent, hands-on learning experience designed to introduce you to some of the most common and critical web application vulnerabilities. By the end of this guide, you'll have a clear understanding of how to identify and exploit Cross-Site Scripting (XSS), SQL Injection (SQLi), Path Traversal, and Command Injection. Get ready to dive into the world of ethical hacking and see firsthand why input sanitization is a developer's best friend. 🔒💻
 
-Task 1: Cross-Site Scripting (XSS)
+#Task 1: Cross-Site Scripting (XSS)
 Vulnerability Analysis
 The search bar on this page is a perfect example of a reflected XSS vulnerability. This happens when an application takes user input and immediately reflects it back to the page without proper sanitization. This allows an attacker to inject and execute malicious scripts in the victim's browser.
 
@@ -14,7 +14,7 @@ Navigate to the website's search bar.
 
 Input the following payload:
 
- <script>alert('xss')</script>
+ <script>alert(1)</script>
 Click the "Search" button.
 
 Observe the result: an alert box should pop up with the text "xss". This confirms the vulnerability is present.
@@ -32,7 +32,7 @@ test" onmouseover="alert(1): This demonstrates how to inject an event handler in
 
 The key takeaway here is to always sanitize and validate all user input. Additionally, implementing a robust Content Security Policy (CSP) header is a crucial defense, as it tells the browser which sources are trusted to execute scripts.
 
-Task 2: SQL Injection (SQLi)
+#Task 2: SQL Injection (SQLi)
 Vulnerability Analysis
 The "User Lookup" form on this page is susceptible to SQL Injection, a serious vulnerability that occurs when an application constructs SQL queries using unsanitized user input. This allows an attacker to manipulate the query and gain unauthorized access to the database.
 
@@ -53,7 +53,7 @@ FLAG2{}
 Lessons Learned
 The most effective way to prevent SQL Injection is by using parameterized queries or prepared statements. These methods separate the SQL code from the user input, ensuring the input is treated as a literal value rather than an executable command.
 
-Task 3: Path Traversal
+#Task 3: Path Traversal
 Vulnerability Analysis
 The "Document Viewer" functionality has a Path Traversal vulnerability. This flaw allows an attacker to read arbitrary files from the server's file system by manipulating the file path with characters like ../ (dot-dot-slash) to navigate up the directory tree.
 
@@ -76,7 +76,7 @@ FLAG3{}
 Lessons Learned
 To prevent this, always validate and sanitize file paths. A whitelist-based access control system is ideal—it only allows access to a pre-defined list of files, effectively blocking any attempts to navigate outside of the designated directory.
 
-Task 4: Command Injection
+#Task 4: Command Injection
 Vulnerability Analysis
 The "Network Diagnostics" form is vulnerable to Command Injection. This happens when an application executes a shell command constructed with unsanitized user input. An attacker can chain commands together, essentially tricking the server into running their own arbitrary commands.
 

@@ -64,7 +64,7 @@ Enter the following payload:
 
 flag3.txt
 Note: In a real-world scenario, you might need to use ../../flag3.txt or a full path like /var/www/html/flag3.txt to find the file.
-
+../../../../etc/passwd
 Click "View Document".
 
 Observe the result: The server returns the contents of flag3.txt instead of a harmless file.

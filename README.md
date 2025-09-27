@@ -1,109 +1,24 @@
-# webfortress-ctf
 TryHackMe: WebFortress-CTF Room - Official Write-Up
 
 Introduction
+Welcome to the official write-up for the WebFortress-CTF Room, a comprehensive journey through common web application vulnerabilities that demonstrates critical security flaws in real-world scenarios. This room provides hands-on experience with various attack vectors, from initial reconnaissance to privilege escalation, highlighting why proper input validation and access controls are essential for web application security. As we navigate through the WebFortress, we'll explore how seemingly minor oversights in development can lead to significant security breaches, emphasizing the importance of secure coding practices and thorough security testing in modern web applications.
 
-Welcome to the official write-up for the Web Exploitation Room! This room is an excellent, hands-on learning experience designed to introduce you to some of the most common and critical web application vulnerabilities. By the end of this guide, you'll have a clear understanding of how to identify and exploit Cross-Site Scripting (XSS), SQL Injection (SQLi), Path Traversal, and Command Injection. Get ready to dive into the world of ethical hacking and see firsthand why input sanitization is a developer's best friend. 🔒💻
+Vulnerability Analysis and Exploitation
+The initial phase of our assessment begins with basic reconnaissance through HTML source code analysis, where developers often inadvertently leave comments containing sensitive information or technical details that can provide attackers with valuable intelligence about the application's structure and potential attack surfaces. This fundamental step demonstrates why organizations should implement proper code review processes and use build tools to strip comments from production code.
 
-# Task 1: Cross-Site Scripting (XSS)
-Vulnerability Analysis
-The search bar on this page is a perfect example of a reflected XSS vulnerability. This happens when an application takes user input and immediately reflects it back to the page without proper sanitization. This allows an attacker to inject and execute malicious scripts in the victim's browser.
+Moving to authentication mechanisms, we encounter a critical SQL Injection vulnerability in the login form, where user input is directly concatenated into SQL queries without proper sanitization. The classic # admin' OR '1'='1 payload effectively bypasses authentication by manipulating the query logic, revealing how inadequate input validation can compromise entire authentication systems. This vulnerability underscores the necessity of using parameterized queries or prepared statements, implementing proper input validation, and applying the principle of least privilege for database accounts.
 
-Exploitation
-Navigate to the website's search bar.
+After gaining access, we discover an Insecure Direct Object Reference (IDOR) vulnerability that allows users to access data belonging to others by simply modifying URL parameters like user_id. This demonstrates how applications often fail to implement proper authorization checks, allowing horizontal privilege escalation where users can view unauthorized data. The vulnerability highlights the importance of implementing proper access control checks server-side for every request and using indirect object references instead of predictable, sequential IDs.
 
-Input the following payload:
+The assessment continues with Path Traversal vulnerabilities in the Document Manager functionality, where attackers can read arbitrary files outside the intended web directory using sequences like ../../../../etc/passwd. This flaw reveals how improper file path validation can lead to complete file system exposure, emphasizing the need for whitelist-based file access controls, proper input sanitization, and running web applications with minimal file system privileges.
 
- <script>alert(1)</script>
-Click the "Search" button.
+We then identify a Cross-Site Scripting (XSS) vulnerability where user input is reflected back without proper encoding, allowing execution of malicious JavaScript through payloads like <script>alert(1)</script>. This client-side vulnerability demonstrates how inadequate output encoding can lead to session hijacking, unauthorized actions, and complete client-side compromise, necessitating proper context-aware output encoding and Content Security Policy implementations.
 
-Observe the result: an alert box should pop up with the text "xss". This confirms the vulnerability is present.
+The final challenge involves privilege escalation to administrative access, requiring attackers to chain previously discovered vulnerabilities or find new attack vectors. This comprehensive attack chain demonstrates how individual vulnerabilities can combine to create severe security impacts, highlighting the importance of proper role-based access control, regular privilege escalation testing, and robust monitoring for unusual access patterns.
 
-Retrieve the flag from the alert box:
-
-FLAG1{}
-
-Alternative Payloads & Lessons Learned
-While the basic payload is effective, understanding different types is key. For example, you could try:
-
-"><script>alert(1)</script>: This payload breaks out of an HTML attribute and injects a script tag.
-
-test" onmouseover="alert(1): This demonstrates how to inject an event handler into an existing HTML tag.
-
-The key takeaway here is to always sanitize and validate all user input. Additionally, implementing a robust Content Security Policy (CSP) header is a crucial defense, as it tells the browser which sources are trusted to execute scripts.
-
-# Task 2: SQL Injection (SQLi)
-Vulnerability Analysis
-The "User Lookup" form on this page is susceptible to SQL Injection, a serious vulnerability that occurs when an application constructs SQL queries using unsanitized user input. This allows an attacker to manipulate the query and gain unauthorized access to the database.
-
-Exploitation
-Navigate to the "User Lookup" form.
-
-Enter the following payload into the input field:
-
-1' UNION SELECT 1,2,3-- -
-Click "Find User".
-
-Observe the result: The database returns unintended data because the UNION operator was used to append a second, malicious query to the original one. The -- - at the end comments out the rest of the original query, preventing syntax errors.
-
-Retrieve the flag from the returned data:
-
-FLAG2{}
-
-Lessons Learned
-The most effective way to prevent SQL Injection is by using parameterized queries or prepared statements. These methods separate the SQL code from the user input, ensuring the input is treated as a literal value rather than an executable command.
-
-# Task 3: Path Traversal
-Vulnerability Analysis
-The "Document Viewer" functionality has a Path Traversal vulnerability. This flaw allows an attacker to read arbitrary files from the server's file system by manipulating the file path with characters like ../ (dot-dot-slash) to navigate up the directory tree.
-
-Exploitation
-Navigate to the "Document Viewer" form.
-
-Enter the following payload:
-
-flag3.txt
-Note: In a real-world scenario, you might need to use ../../flag3.txt or a full path like /var/www/html/flag3.txt to find the file.
-../../../../etc/passwd
-Click "View Document".
-
-Observe the result: The server returns the contents of flag3.txt instead of a harmless file.
-
-Retrieve the flag:
-
-FLAG3{}
-
-Lessons Learned
-To prevent this, always validate and sanitize file paths. A whitelist-based access control system is ideal—it only allows access to a pre-defined list of files, effectively blocking any attempts to navigate outside of the designated directory.
-
-# Task 4: Command Injection
-Vulnerability Analysis
-The "Network Diagnostics" form is vulnerable to Command Injection. This happens when an application executes a shell command constructed with unsanitized user input. An attacker can chain commands together, essentially tricking the server into running their own arbitrary commands.
-
-Exploitation
-Navigate to the "Network Diagnostics" form.
-
-Enter the following payload:
-
-google.com; ls
-Click "Test Connection".
-
-Observe the result: The application executes the ping google.com command as intended, but then the ; (semicolon) character acts as a command separator, allowing the ls command to also be executed. The server then returns the output of both commands.
-
-Retrieve the flag:
-
-FLAG4{}
-
-Alternative Payloads & Lessons Learned
-Other common command separators you could try include | (pipe) or &&. For example:
-
-google.com; ls
-
-google.com | whoami: Executes whoami, revealing the user the server is running as.
-
-google.com; cat /etc/passwd: Attempts to read the sensitive passwd file.
-
-The best defense against this is to never execute user input directly in shell commands. Instead, use secure, built-in APIs for specific tasks, and apply strict input validation.
+Additional Testing Areas
+Beyond the primary vulnerabilities, the application contains additional areas like the Resource Search functionality and Document Manager that warrant thorough testing for XSS, SQL Injection, and information disclosure vulnerabilities. The administrator access requires specific interaction, prompting testers to look for hidden admin endpoints, commented-out functionality in page source, and use directory brute-forcing techniques to discover privileged administrative interfaces that may not be immediately visible through normal application usage.
 
 Conclusion
-This room provided a great foundation for understanding fundamental web vulnerabilities. You've now seen how simple failures in input validation and sanitization can lead to critical security flaws like XSS, SQLi, Path Traversal, and Command Injection. Remember these lessons as you continue your cybersecurity journey and strive to build or defend applications that are secure by design. What other vulnerabilities are you curious to explore?
+The WebFortress-CTF room provides a realistic environment for understanding fundamental web application vulnerabilities and their exploitation techniques. Through this practical exercise, security professionals gain valuable insights into common security flaws, proper testing methodologies, and effective defense strategies. The room emphasizes that security is not a feature but a fundamental aspect of development that requires continuous attention, thorough testing, and defense-in-depth approaches. By understanding these vulnerabilities and their mitigations, developers and security practitioners can build more secure applications and better protect against real-world threats in an increasingly interconnected digital landscape.
+

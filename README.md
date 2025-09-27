@@ -1,24 +1,75 @@
 TryHackMe: WebFortress-CTF Room - Official Write-Up
 
-Introduction
-Welcome to the official write-up for the WebFortress-CTF Room, a comprehensive journey through common web application vulnerabilities that demonstrates critical security flaws in real-world scenarios. This room provides hands-on experience with various attack vectors, from initial reconnaissance to privilege escalation, highlighting why proper input validation and access controls are essential for web application security. As we navigate through the WebFortress, we'll explore how seemingly minor oversights in development can lead to significant security breaches, emphasizing the importance of secure coding practices and thorough security testing in modern web applications.
+# Introduction
 
-Vulnerability Analysis and Exploitation
-The initial phase of our assessment begins with basic reconnaissance through HTML source code analysis, where developers often inadvertently leave comments containing sensitive information or technical details that can provide attackers with valuable intelligence about the application's structure and potential attack surfaces. This fundamental step demonstrates why organizations should implement proper code review processes and use build tools to strip comments from production code.
+Welcome to the official write-up for the WebFortress-CTF Room, a comprehensive journey through common web application vulnerabilities. This room demonstrates how seemingly minor oversights in development can lead to significant security breaches, emphasizing the importance of secure coding practices and thorough security testing in modern web applications.
 
-Moving to authentication mechanisms, we encounter a critical SQL Injection vulnerability in the login form, where user input is directly concatenated into SQL queries without proper sanitization. The classic # admin' OR '1'='1 payload effectively bypasses authentication by manipulating the query logic, revealing how inadequate input validation can compromise entire authentication systems. This vulnerability underscores the necessity of using parameterized queries or prepared statements, implementing proper input validation, and applying the principle of least privilege for database accounts.
+# Vulnerability Analysis and Exploitation
+1. Reconnaissance – HTML Source Analysis
 
-After gaining access, we discover an Insecure Direct Object Reference (IDOR) vulnerability that allows users to access data belonging to others by simply modifying URL parameters like user_id. This demonstrates how applications often fail to implement proper authorization checks, allowing horizontal privilege escalation where users can view unauthorized data. The vulnerability highlights the importance of implementing proper access control checks server-side for every request and using indirect object references instead of predictable, sequential IDs.
+Developers sometimes leave comments or debug information in HTML source code. These can disclose technologies used, hidden parameters, or credentials.
+Key Takeaway: Always remove sensitive comments from production code.
 
-The assessment continues with Path Traversal vulnerabilities in the Document Manager functionality, where attackers can read arbitrary files outside the intended web directory using sequences like ../../../../etc/passwd. This flaw reveals how improper file path validation can lead to complete file system exposure, emphasizing the need for whitelist-based file access controls, proper input sanitization, and running web applications with minimal file system privileges.
+# 2. SQL Injection in Login Form
 
-We then identify a Cross-Site Scripting (XSS) vulnerability where user input is reflected back without proper encoding, allowing execution of malicious JavaScript through payloads like <script>alert(1)</script>. This client-side vulnerability demonstrates how inadequate output encoding can lead to session hijacking, unauthorized actions, and complete client-side compromise, necessitating proper context-aware output encoding and Content Security Policy implementations.
+The login form concatenates user input directly into SQL queries without sanitization. This allows an attacker to manipulate the query logic and bypass authentication.
 
-The final challenge involves privilege escalation to administrative access, requiring attackers to chain previously discovered vulnerabilities or find new attack vectors. This comprehensive attack chain demonstrates how individual vulnerabilities can combine to create severe security impacts, highlighting the importance of proper role-based access control, regular privilege escalation testing, and robust monitoring for unusual access patterns.
+⚠️ Test Payload Example (Lab Use Only)
+
+admin' OR '1'='1
+
+
+This payload demonstrates a tautology-based SQL Injection attack used in training environments only.
+
+Explanation:
+The payload alters the SQL logic to always evaluate as true. Proper mitigations include parameterized queries (prepared statements), strong input validation, and least-privilege database accounts.
+
+# 3. Insecure Direct Object Reference (IDOR)
+
+By changing a predictable URL parameter such as user_id, an attacker can view another user’s information.
+Example: /profile?user_id=101 → change to /profile?user_id=2.
+
+Key Takeaway: Always perform server-side authorization checks and use indirect references rather than sequential IDs.
+
+# 4. Path Traversal – Document Manager
+
+Improper file path validation allows attackers to access files outside the intended directory.
+
+⚠️ Test Payload Example (Lab Use Only)
+
+....//....//....//....//etc/passwd
+../../../..//etc/passwd
+
+
+This payload demonstrates a typical directory traversal attack in a controlled lab.
+
+Explanation:
+Attackers can read sensitive system files. Mitigation includes using whitelist-based file access, validating input rigorously, and limiting file system privileges.
+
+# 5. Cross-Site Scripting (XSS)
+
+User input is reflected back without encoding, allowing malicious JavaScript execution.
+
+⚠️ Test Payload Example (Lab Use Only)
+
+<scr!pt>alert(1)</scr!pt>
+
+
+This neutralized payload shows a reflected XSS attempt.
+
+Explanation:
+Mitigation includes context-aware output encoding, using Content Security Policy (CSP), and sanitizing input.
+
+# 6. Privilege Escalation
+
+Attackers can combine previous vulnerabilities to escalate privileges to administrative access. This highlights why individual flaws must be fixed quickly and why layered security controls matter.
+
+Key Takeaway: Always implement robust role-based access control, test privilege boundaries regularly, and monitor for suspicious access patterns.
 
 Additional Testing Areas
-Beyond the primary vulnerabilities, the application contains additional areas like the Resource Search functionality and Document Manager that warrant thorough testing for XSS, SQL Injection, and information disclosure vulnerabilities. The administrator access requires specific interaction, prompting testers to look for hidden admin endpoints, commented-out functionality in page source, and use directory brute-forcing techniques to discover privileged administrative interfaces that may not be immediately visible through normal application usage.
+
+The Resource Search functionality and Document Manager warrant thorough testing for SQL Injection, XSS, and information disclosure. Hidden admin endpoints may exist and can be found using directory brute-forcing, reviewing page source, or analyzing JavaScript files.
 
 Conclusion
-The WebFortress-CTF room provides a realistic environment for understanding fundamental web application vulnerabilities and their exploitation techniques. Through this practical exercise, security professionals gain valuable insights into common security flaws, proper testing methodologies, and effective defense strategies. The room emphasizes that security is not a feature but a fundamental aspect of development that requires continuous attention, thorough testing, and defense-in-depth approaches. By understanding these vulnerabilities and their mitigations, developers and security practitioners can build more secure applications and better protect against real-world threats in an increasingly interconnected digital landscape.
 
+The WebFortress-CTF room provides a realistic environment for understanding fundamental web application vulnerabilities and their exploitation techniques. By practicing in a controlled environment, security professionals gain insights into common flaws, proper testing methodologies, and effective defense strategies. This exercise reinforces that security is not a one-time feature but an ongoing process requiring continuous testing, defense-in-depth, and secure development practices.

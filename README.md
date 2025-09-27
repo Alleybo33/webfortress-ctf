@@ -70,6 +70,6 @@ Additional Testing Areas
 
 The Resource Search functionality and Document Manager warrant thorough testing for SQL Injection, XSS, and information disclosure. Hidden admin endpoints may exist and can be found using directory brute-forcing, reviewing page source, or analyzing JavaScript files.
 
-Conclusion
+# Conclusion
 
 The WebFortress-CTF room provides a realistic environment for understanding fundamental web application vulnerabilities and their exploitation techniques. By practicing in a controlled environment, security professionals gain insights into common flaws, proper testing methodologies, and effective defense strategies. This exercise reinforces that security is not a one-time feature but an ongoing process requiring continuous testing, defense-in-depth, and secure development practices.
